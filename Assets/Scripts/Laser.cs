@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Laser : MonoBehaviour
@@ -11,10 +10,11 @@ public class Laser : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        gameManager = GameObject.Find("GameManger").GetComponent<GameManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
         Destroy(gameObject,4f);
     }
-
+    
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + (Vector2)transform.up * speed * Time.fixedDeltaTime);
@@ -22,10 +22,10 @@ public class Laser : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Enemy"))
+        if(collision.gameObject.CompareTag("Enemy"))
         {
             Destroy(collision.gameObject);
-            Instantiate(explosionPrefab,transform.position,quaternion.identity);
+            Instantiate(explosionPrefab,transform.position,Quaternion.identity);
             gameManager.IncreaseScore();
             Destroy(gameObject);
         }

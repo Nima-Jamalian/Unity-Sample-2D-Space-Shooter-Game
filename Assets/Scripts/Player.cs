@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -6,9 +7,11 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 direction;
     [SerializeField] private GameObject laserPrefab;
+    [SerializeField] private GameObject explosionPrefab;
 
     private Animator animator;
 
+    [SerializeField] UIManager uIManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -47,9 +50,14 @@ public class Player : MonoBehaviour
         }
 
         // Clamp Y position
-        newPosition.y = Mathf.Clamp(newPosition.y,-GameManager.worldSizeHeight + 1f,0f);
+        newPosition.y = Mathf.Clamp(newPosition.y,-GameManager.worldSizeHeight + 0.5f,0f);
 
         rb.MovePosition(newPosition);
+    }
+
+    private void Animate()
+    {
+        animator.SetFloat("X",direction.x);
     }
 
     private void Shooting()
@@ -60,8 +68,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Animate()
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        animator.SetFloat("X", direction.x);
+        if (collision.CompareTag("Enemy"))
+        {
+            Destroy(collision.gameObject);
+            Instantiate(explosionPrefab,transform.position,Quaternion.identity);
+            GameOver();
+        }
     }
+
+    private void GameOver()
+    {
+        uIManager.DisplayGameOver();
+        Destroy(gameObject);
+    }
+
 }
