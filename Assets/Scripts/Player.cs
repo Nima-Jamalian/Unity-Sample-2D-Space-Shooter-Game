@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -48,7 +47,7 @@ public class Player : MonoBehaviour
         }
 
         // Clamp Y position
-        newPosition.y = Mathf.Clamp(newPosition.y,-GameManager.worldSizeHeight + 0.5f,0f);
+        newPosition.y = Mathf.Clamp(newPosition.y,-GameManager.worldSizeHeight + 1f,0f);
 
         rb.MovePosition(newPosition);
     }
